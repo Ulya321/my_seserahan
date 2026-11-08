@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seserahan | Minimalist Wishlist</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nude: {
+                            50: '#FAF8F5',
+                            100: '#F3EDE6',
+                            200: '#E5D9CC',
+                            300: '#D1BEAD',
+                            400: '#B59982',
+                            500: '#937660',
+                            600: '#735B49',
+                            800: '#4A433D'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #FAF8F5;
+            color: #4A433D;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .tab-btn {
+            transition: all 0.25s ease;
+        }
+
+        .tab-btn.active {
+            background-color: #4A433D;
+            color: #FAF8F5;
+            border-color: #4A433D;
+        }
+
+        .item-card {
+            transition: all 0.2s ease;
+        }
+
+        .item-card:hover {
+            border-color: #B59982;
+            background-color: #FFFFFF;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF8F5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E5D9CC;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B59982;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-nude-200 selection:text-nude-800">
+
+    <!-- Header Section -->
+    <header class="pt-12 pb-8 px-4 text-center">
+        <div class="max-w-xl mx-auto">
+            <span class="text-[11px] tracking-[0.3em] text-nude-400 uppercase font-medium block mb-2">Wedding Checklist</span>
+            <h1 class="font-serif text-3xl sm:text-4xl font-normal tracking-tight text-nude-800 mb-3">Seserahan</h1>
+            <!-- <p class="text-xs sm:text-sm text-nude-500 font-light leading-relaxed">
+                Daftar kurasi produk kecantikan & perawatan diri sebagai panduan item seserahan.
+            </p> -->
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-3xl w-full mx-auto px-4 sm:px-6 py-4">
+        
+        <!-- Controls: Search & Tabs -->
+        <div class="space-y-6 mb-8">
+            <!-- Simple Clean Search Input -->
+            <div class="relative max-w-md mx-auto">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-nude-400 text-xs"></i>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Cari item (misal: moisturizer, blush, lotion)..." 
+                    class="w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm bg-white/80 border border-nude-200 rounded-full focus:outline-none focus:border-nude-400 transition-colors placeholder:text-nude-300 text-nude-800 shadow-sm"
+                >
+                <button id="clearSearchBtn" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-nude-300 hover:text-nude-600 text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-2 text-xs">
+                <button class="tab-btn active px-4 py-1.5 rounded-full border border-nude-200 text-nude-600 font-medium hover:border-nude-400" data-category="all">
+                    Semua
+                </button>
+                <button class="tab-btn px-4 py-1.5 rounded-full border border-nude-200 text-nude-600 font-medium hover:border-nude-400" data-category="skincare">
+                    Skincare
+                </button>
+                <button class="tab-btn px-4 py-1.5 rounded-full border border-nude-200 text-nude-600 font-medium hover:border-nude-400" data-category="makeup">
+                    Makeup
+                </button>
+                <button class="tab-btn px-4 py-1.5 rounded-full border border-nude-200 text-nude-600 font-medium hover:border-nude-400" data-category="bodycare">
+                    Body Care
+                </button>
+            </div>
+        </div>
+
+        <!-- Ultra-Minimalist List Grid -->
+        <div id="itemsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <!-- Items rendered via JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden py-12 text-center">
+            <p class="font-serif text-base text-nude-600 mb-1">Tidak ada item ditemukan</p>
+            <p class="text-xs text-nude-400 mb-4">Coba cari dengan kata kunci lain.</p>
+            <button id="resetBtn" class="px-4 py-1.5 bg-nude-800 text-nude-50 rounded-full text-xs font-medium hover:bg-nude-600 transition-colors">
+                Tampilkan Semua Item
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Simple Minimal Footer -->
+    <footer class="py-8 text-center text-xs text-nude-400 border-t border-nude-200/50 mt-12">
+        <p class="font-serif text-sm text-nude-600 italic mb-1">Seserahan</p>
+        <p class="text-[11px] text-nude-400">&copy; 2026 • Curated Shopee Links</p>
+    </footer>
+
+    <!-- JavaScript Engine -->
+    <script>
+        // Data Produk Ultra-Minimalis (Tanpa Foto & Tanpa Harga)
+        const products = [
+            // --- SKINCARE ---
+            {
+                title: "Day Cream",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: "https://id.shp.ee/avatE5Zb"
+            },
+            {
+                title: "Night Cream",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: "https://id.shp.ee/JFUDkpUi"
+            },
+            {
+                title: "Sunscreen",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: " https://id.shp.ee/NomCQeWF"
+            },
+            {
+                title: "Facial Wash",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: "https://id.shp.ee/ggydTy6t"
+            },
+            {
+                title: "Toner",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: "https://id.shp.ee/RSXZfs77"
+            },
+            {
+                title: "Serum",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: "https://id.shp.ee/8dKohcxn"
+            },
+            {
+                title: "Micellar Water Nivea",
+                category: "skincare",
+                categoryLabel: "Skincare",
+                shopeeUrl: "https://id.shp.ee/xD5QER6U"
+            },
+
+            // --- MAKEUP ---
+            {
+                title: "Esqa Glaze Eyeshadow",
+                category: "makeup",
+                categoryLabel: "Makeup",
+                description: "Day Dreaming",
+                shopeeUrl: "https://id.shp.ee/ad1ycFDe"
+            },
+            {
+                title: "Setting Spray Dazzle Me",
+                category: "makeup",
+                categoryLabel: "Makeup",
+                description: "Prime+Set Matte",
+                shopeeUrl: "https://id.shp.ee/2uB3bSWF"
+            },
+            {
+                title: "Mascara Barenbliss",
+                category: "makeup",
+                categoryLabel: "Makeup",
+                description: "Roll to Hight (Ungu)",
+                shopeeUrl: "https://id.shp.ee/nN8B7vzN"
+            },
+            {
+                title: "Lip Gloss Rose All Day",
+                category: "makeup",
+                categoryLabel: "Makeup",
+                description: "Soft Spot",
+                shopeeUrl: "https://id.shp.ee/RapX8u1L"
+            },
+            {
+                title: "Loose Powder OMG",
+                category: "makeup",
+                categoryLabel: "Makeup",
+                description: "Natural",
+                shopeeUrl: "https://id.shp.ee/xBByLynG"
+            },
+            {
+                title: "Cushion Esqa",
+                category: "makeup",
+                categoryLabel: "Makeup",
+                description: "Bisquit",
+                shopeeUrl: "https://id.shp.ee/3dQGdefe"
+            },
+
+            // --- BODY CARE ---
+            {
+                title: "Body Wash Scarlet", 
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                shopeeUrl: "https://id.shp.ee/GUJw3ePy"
+            },
+            {
+                title: "Body Lotion",
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                description: "Bundling Day & Night",
+                shopeeUrl: " https://id.shp.ee/ihSnbZ4L"
+            },
+            {
+                title: "Hair Tonic",
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                description: "Healthy Shine (Kuning)",
+                shopeeUrl: " https://id.shp.ee/bMFPA3vD"
+            },
+            {
+                title: "Body Serum",
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                shopeeUrl: "https://id.shp.ee/ehMEoEUT"
+            },
+            {
+                title: "Body Scrub",
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                shopeeUrl: "https://id.shp.ee/LpJkWa4J"
+            },
+            {
+                title: "Body Mist",
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                shopeeUrl: " https://id.shp.ee/dmcXBSxd"
+            },
+            {
+                title: "Hair Serum",
+                category: "bodycare",
+                categoryLabel: "Body Care",
+                shopeeUrl: "https://id.shp.ee/3teQSUjD"
+            }
+        ];
+
+        // State Filter & Search
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // DOM Elements
+        const itemsContainer = document.getElementById('itemsContainer');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        // Render Function
+        function renderItems() {
+            const filtered = products.filter(item => {
+                const matchCategory = currentCategory === 'all' || item.category === currentCategory;
+                const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    item.categoryLabel.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCategory && matchSearch;
+            });
+
+            itemsContainer.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                itemsContainer.classList.add('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+                itemsContainer.classList.remove('hidden');
+            }
+
+            filtered.forEach(item => {
+                const card = `
+                    <div class="item-card bg-nude-100/60 border border-nude-200/80 rounded-xl p-4 sm:p-4.5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-2">
+                                <span class="text-[10px] uppercase font-medium tracking-wider text-nude-500 bg-white/80 px-2 py-0.5 rounded border border-nude-200/40">
+                                    ${item.categoryLabel}
+                                </span>
+                            </div>
+                            <h3 class="font-serif text-base sm:text-lg font-semibold text-nude-800 leading-snug mb-1.5">
+                                ${item.title}
+                            </h3>
+                            <p class="text-xs text-nude-600 font-light leading-relaxed mb-4">
+                                ${item.description}
+                            </p>
+                        </div>
+
+                        <div class="pt-2 border-t border-nude-200/50 flex justify-end">
+                            <a 
+                                href="${item.shopeeUrl}" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1.5 text-xs text-nude-600 hover:text-nude-800 font-medium group transition-colors"
+                            >
+                                <span>Lihat di Shopee</span>
+                                <i class="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                itemsContainer.innerHTML += card;
+            });
+        }
+
+        // Tab Filter Listener
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.getAttribute('data-category');
+                renderItems();
+            });
+        });
+
+        // Search Input Listener
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim();
+            if (searchQuery) {
+                clearSearchBtn.classList.remove('hidden');
+            } else {
+                clearSearchBtn.classList.add('hidden');
+            }
+            renderItems();
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            clearSearchBtn.classList.add('hidden');
+            renderItems();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            clearSearchBtn.classList.add('hidden');
+            currentCategory = 'all';
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabBtns[0].classList.add('active');
+            renderItems();
+        });
+
+        // Initial Call
+        window.onload = function() {
+            renderItems();
+        };
+    </script>
+</body>
+</html>
